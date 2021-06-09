@@ -3,6 +3,7 @@ import sys
 import os
 import csv
 import matplotlib.pyplot as plt
+import argparse
 
 import DataRandom
 import DataThread
@@ -10,8 +11,6 @@ import DataUnix
 
 
 def plotting(time, randnum, threads):
-    avg = DataThread.separate_threads(threads)[6]
-
     plot1 = plt.figure(1)  # Thread value over time
     plt.plot(time, threads)
     plt.title("Thread ID Over Time")
@@ -57,7 +56,10 @@ def collect_filename():
                 file_path = filename_checker(file_path)[1]
                 break
     else:
-        file_path = str(sys.argv[1])  # #FIXME use argeparse module, does validation
+        parser = argparse.ArgumentParser()
+        parser.add_argument('file_path', type=str)
+        p = parser.parse_args()
+        file_path = p.file_path
         if not filename_checker(file_path):
             sys.exit(1)  # Exits the program
     return file_path
@@ -71,7 +73,7 @@ def gather_data(file_path):
         for row in csv_read:
             try:
                 unix_list.append(float(row[0]))
-                time_list.append(float(row[0]) - unix_list[0])  # FIXME Record zero is not the smallest
+                time_list.append(float(row[0]) - min(unix_list))
                 thread_list.append(float(row[1]))
                 randnum_list.append(float(row[2]))
             except:
@@ -88,7 +90,7 @@ def main():
 
     # OUTPUTS
     DataUnix.DataUnix(unix_list).output_unix_metrics()
-    DataThread.DataThread(thread_list).output_thread_metrics()
+    DataThread.DataThread(thread_list).output_thread_metrics(unix_list)
     DataRandom.DataRandom(randnum_list).output_randnum_metrics()
     plotting(time_list, randnum_list, thread_list)
 

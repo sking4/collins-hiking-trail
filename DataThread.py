@@ -1,44 +1,47 @@
+import datetime
+
 import numpy as np
+import tabulate
 from tabulate import tabulate
 
 
 class DataThread(object):
+    import datetime
     import numpy as np
     from tabulate import tabulate
-    import datetime
 
     def __init__(self, mylist):
         super(DataThread, self).__init__()
         self.mylist = mylist
 
-    def num_records(self):
-        return len(self.mylist)
+    def num_records(self, arr):
+        return len(arr)
 
-    def earliest_record(self):
-        return np.min(self.mylist)
+    def earliest_record(self, array):
+        return np.min(array)
 
-    def latest_record(self):
-        return np.max(self.mylist)
+    def latest_record(self, array):
+        return np.max(array)
 
-    def range(self):
-        return self.latest_record() - self.earliest_record()
+    def range(self, array):
+        return self.latest_record(array) - self.earliest_record(array)
 
     def records_per(self):
         return np.count(self.mylist)
 
-    def add_thread_metrics(self, n, arr_set, data, arr_ranges, arr_records, arr_durations):
+    def add_thread_metrics(self, arr, n, arr_set, data, arr_ranges, arr_records, arr_durations):
         # Metrics per thread
-        data.append(["{:e}".format(arr_set[n]), self.num_records(), None, None]) #FIXME remove Nones and fix timestamp, timestamp should be unix record at that thread location
-        #   datetime.datetime.fromtimestamp(self.earliest_record()),
-        #   datetime.datetime.fromtimestamp(self.latest_record())])
+        data.append(["{:e}".format(arr_set[n]), self.num_records(arr),
+                     datetime.datetime.fromtimestamp(self.earliest_record(arr)),
+                     datetime.datetime.fromtimestamp(self.latest_record(arr))])
 
         # Metrics about all threads
-        arr_ranges.append(self.range())
-        arr_records.append(self.num_records())
-        arr_durations.append(self.range())
+        arr_ranges.append(self.range(arr))
+        arr_records.append(self.num_records(arr))
+        arr_durations.append(self.range(arr))
 
-    def separate_threads(self):
-        arr_set = sorted(list(set(self.mylist)))
+    def separate_threads(self, unix_list):
+        arr_set = sorted(set(self.mylist))
         unique_arr_count = len(arr_set)
 
         data = []
@@ -53,17 +56,18 @@ class DataThread(object):
             for ele_test in range(0, len(self.mylist)):  # Go through the thread list and find the time values for each
                 if self.mylist[ele_test] == test_arr:
                     unix_per_arr_list.append(
-                        self.mylist[ele_test])  # Add all of the timestamps for that thread to a list
+                        unix_list[ele_test])  # Add all of the timestamps for that thread to a list
             arr = np.array(unix_per_arr_list)
 
-            self.add_thread_metrics(ele_base, arr_set, data, arr_ranges, arr_records, arr_durations)
+            self.add_thread_metrics(arr, ele_base, arr_set, data, arr_ranges, arr_records, arr_durations)
 
         avg_per_period = sum(arr_records) / unique_arr_count
 
         return arr_set, unique_arr_count, data, arr_ranges, arr_records, arr_durations, avg_per_period
 
-    def output_thread_metrics(self):
-        thread_set, unique_threads, thread_data, threads_ranges, threads_records, threads_durations = self.separate_threads()[0:6]
+    def output_thread_metrics(self, unix_list):
+        thread_set, unique_threads, thread_data, threads_ranges, threads_records, threads_durations = self.separate_threads(
+            unix_list)[0:6]
         avg_records_per_thread = sum(threads_records) / unique_threads
         print("Number of unique thread values generated: ", unique_threads)
 

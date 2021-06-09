@@ -1,3 +1,6 @@
+import datetime
+
+
 class DataUnix(object): # putting object uses object inheritance?
     import datetime #FIXME Where does this import go?
 
@@ -10,12 +13,10 @@ class DataUnix(object): # putting object uses object inheritance?
         return max(self.mylist) - min(self.mylist)
 
     def start_time(self):
-        #return datetime.datetime.fromtimestamp(min(self.mylist)) #FIXME
-        return 1
+        return datetime.datetime.fromtimestamp(min(self.mylist))
 
     def end_time(self):
-        #return datetime.datetime.fromtimestamp(max(self.mylist)) #FIXME
-        return 1
+        return datetime.datetime.fromtimestamp(max(self.mylist))
 
     def output_unix_metrics(self):
         print("\nNumber of data points: ", len(self.mylist))
