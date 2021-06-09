@@ -1,4 +1,4 @@
-class Threads(object):
+class DataThread(object):
     def __init__(self, mylist):
         super(Threads, self).__init__()
         self.mylist = mylist
