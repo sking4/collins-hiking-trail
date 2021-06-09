@@ -1,6 +1,6 @@
 class DataThread(object):
     def __init__(self, mylist):
-        super(Threads, self).__init__()
+        super(DataThread, self).__init__()
         self.mylist = mylist
 
     def num_records(self):

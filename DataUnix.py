@@ -1,6 +1,6 @@
 class DataUnix(object): # putting object uses object inheritance?
     def __init__(self, mylist):
-        super(Unix, self).__init__()
+        super(DataUnix, self).__init__()
         self.mylist = mylist
 
     def duration(self):

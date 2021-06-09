@@ -1,6 +1,6 @@
 class DataRandom(object):
     def __init__(self, mylist):
-        super(RandomNumbers, self).__init__()
+        super(DataRandom, self).__init__()
         self.mylist = mylist
 
     def output_randnum_metrics(self):
