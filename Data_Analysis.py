@@ -10,7 +10,7 @@ import DataUnix
 
 
 def plotting(time, randnum, threads):
-    avg = Threads.separate_threads(threads)[6]
+    avg = DataThread.separate_threads(threads)[6]
 
     plot1 = plt.figure(1)  # Thread value over time
     plt.plot(time, threads)
