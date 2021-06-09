@@ -7,6 +7,9 @@ import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 
+import DataRandom
+import DataThread
+import DataUnix
 
 def plotting(time, randnum, threads):
     avg = Threads.separate_threads(threads)[6]
