@@ -1,15 +1,13 @@
 from __future__ import print_function
-from tabulate import tabulate
 import sys
 import os
 import csv
-import datetime
 import matplotlib.pyplot as plt
-import numpy as np
 
 import DataRandom
 import DataThread
 import DataUnix
+
 
 def plotting(time, randnum, threads):
     avg = Threads.separate_threads(threads)[6]
@@ -48,7 +46,7 @@ def filename_checker(file_path):
         print("File not found at " + str(file_path))
     else:
         isValid = True
-    return isValid
+    return isValid, file_path
 
 
 def collect_filename():
@@ -56,6 +54,7 @@ def collect_filename():
         while True:
             file_path = input("Please specify the data CSV file path: ")
             if filename_checker(file_path):
+                file_path = filename_checker(file_path)[1]
                 break
     else:
         file_path = str(sys.argv[1])  # #FIXME use argeparse module, does validation
