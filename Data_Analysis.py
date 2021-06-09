@@ -88,9 +88,9 @@ def main():
     unix_list, time_list, thread_list, randnum_list = gather_data(file_path)
 
     # OUTPUTS
-    DataUnix(unix_list).output_unix_metrics()
-    DataThread(thread_list).output_thread_metrics()
-    DataRandom(randnum_list).output_randnum_metrics()
+    DataUnix.DataUnix(unix_list).output_unix_metrics()
+    DataThread.DataThread(thread_list).output_thread_metrics()
+    DataRandom.DataRandom(randnum_list).output_randnum_metrics()
     plotting(time_list, randnum_list, thread_list)
 
 
