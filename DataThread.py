@@ -4,8 +4,9 @@ import numpy as np
 import tabulate
 from tabulate import tabulate
 
+from DataObject import DataObject
 
-class DataThread(object):
+class DataThread(DataObject):
     def __init__(self, mylist):
         super(DataThread, self).__init__()
         self.mylist = mylist
