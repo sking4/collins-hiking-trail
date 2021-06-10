@@ -5,7 +5,7 @@ class DataUnix(object): # putting object uses object inheritance?
     import datetime #FIXME Where does this import go?
 
     def __init__(self, mylist):
-        import datetime
+
         super(DataUnix, self).__init__()
         self.mylist = mylist
 

@@ -6,10 +6,6 @@ from tabulate import tabulate
 
 
 class DataThread(object):
-    import datetime
-    import numpy as np
-    from tabulate import tabulate
-
     def __init__(self, mylist):
         super(DataThread, self).__init__()
         self.mylist = mylist
