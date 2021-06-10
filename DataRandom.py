@@ -1,14 +1,10 @@
 from DataObject import DataObject
 
 class DataRandom(DataObject):
-    def __init__(self, mylist):
-        super(DataRandom, self).__init__(mylist)
-        self.mylist = mylist
-
     def output_randnum_metrics(self):
         # Range
-        randnum_min = min(self.mylist)
-        randnum_max = max(self.mylist)
+        randnum_min = self.earliest_record()
+        randnum_max = self.latest_record()
         print("\nRandom numbers generated from", randnum_min, "to", randnum_max)
 
         # Sort randomly generated numbers

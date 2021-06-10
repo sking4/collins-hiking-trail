@@ -92,7 +92,7 @@ def main():
     DataUnix.DataUnix(unix_list).output_unix_metrics()
     DataThread.DataThread(thread_list).output_thread_metrics(unix_list)
     DataRandom.DataRandom(randnum_list).output_randnum_metrics()
-    plotting(time_list, randnum_list, thread_list)
+    #plotting(time_list, randnum_list, thread_list)
 
 
 if __name__ == '__main__':

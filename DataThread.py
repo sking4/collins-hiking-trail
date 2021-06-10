@@ -6,36 +6,18 @@ from tabulate import tabulate
 
 from DataObject import DataObject
 
+
 class DataThread(DataObject):
-    def __init__(self, mylist):
-        super(DataThread, self).__init__(mylist)
-        self.mylist = mylist
-
-    def num_records(self, arr):
-        return len(arr)
-
-    def earliest_record(self, array):
-        return np.min(array)
-
-    def latest_record(self, array):
-        return np.max(array)
-
-    def range(self, array):
-        return self.latest_record(array) - self.earliest_record(array)
-
-    def records_per(self):
-        return np.count(self.mylist)
-
     def add_thread_metrics(self, arr, n, arr_set, data, arr_ranges, arr_records, arr_durations):
         # Metrics per thread
-        data.append(["{:e}".format(arr_set[n]), self.num_records(arr),
-                     datetime.datetime.fromtimestamp(self.earliest_record(arr)),
-                     datetime.datetime.fromtimestamp(self.latest_record(arr))])
+        data.append(["{:e}".format(arr_set[n]), self.len(),
+                     datetime.datetime.fromtimestamp(self.earliest_record()),
+                     datetime.datetime.fromtimestamp(self.latest_record())])
 
         # Metrics about all threads
-        arr_ranges.append(self.range(arr))
-        arr_records.append(self.num_records(arr))
-        arr_durations.append(self.range(arr))
+        arr_ranges.append(self.range())
+        arr_records.append(self.len())
+        arr_durations.append(self.range())
 
     def separate_threads(self, unix_list):
         arr_set = sorted(set(self.mylist))
