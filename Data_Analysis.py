@@ -8,6 +8,7 @@ import argparse
 import DataRandom
 import DataThread
 import DataUnix
+import ThreadRecords
 
 
 def plotting(time, randnum, threads):
@@ -72,10 +73,18 @@ def gather_data(file_path):
         csv_read = csv.reader(csv_file)
         for row in csv_read:
             try:
+                foundThread = False
+                for threadObj in threadList:
+                    if row[1] == threadObj.getThreadID()
+                        threadObj.appendEntry(float(row[0]), int(row[2]))
+                        foundThread = True
+                        break
+                if not foundThread:
+                    thread_list.append(ThreadRecords.ThreadRecords(row[1], [ (float(row[0]),
+                                                                              int(row[2]))] ))
+                randnum_list.append(float(row[2]))
                 unix_list.append(float(row[0]))
                 time_list.append(float(row[0]) - min(unix_list))
-                thread_list.append(float(row[1]))
-                randnum_list.append(float(row[2]))
             except:
                 next(csv_read)
     return unix_list, time_list, thread_list, randnum_list
@@ -90,10 +99,13 @@ def main():
 
     # OUTPUTS
     DataUnix.DataUnix(unix_list).output_unix_metrics()
-    DataThread.DataThread(thread_list).output_thread_metrics(unix_list)
+    #DataThread.DataThread(thread_list).output_thread_metrics(unix_list)
+    for thread in thread_list:
+        print(thread.getThreadID() + "\tmin time:\t" + np.min(thread.timestamps())
+        print(thread.getThreadID() + "\tmax time:\t" + np.max(thread.timestamps())
     DataRandom.DataRandom(randnum_list).output_randnum_metrics()
-    #plotting(time_list, randnum_list, thread_list)
+    plotting(time_list, randnum_list, thread_list)
 
 
 if __name__ == '__main__':
-    main()
+    main()            
