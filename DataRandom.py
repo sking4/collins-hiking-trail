@@ -1,4 +1,6 @@
-class DataRandom(object):
+from DataObject import DataObject
+
+class DataRandom(DataObject):
     def __init__(self, mylist):
         super(DataRandom, self).__init__()
         self.mylist = mylist
