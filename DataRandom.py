@@ -2,7 +2,7 @@ from DataObject import DataObject
 
 class DataRandom(DataObject):
     def __init__(self, mylist):
-        super(DataRandom, self).__init__()
+        super(DataRandom, self).__init__(mylist)
         self.mylist = mylist
 
     def output_randnum_metrics(self):
