@@ -5,7 +5,7 @@ from DataObject import DataObject
 class DataUnix(DataObject): # putting object uses object inheritance?
     def __init__(self, mylist):
 
-        super(DataUnix, self).__init__()
+        super(DataUnix, self).__init__(mylist)
         self.mylist = mylist
 
     def duration(self):
