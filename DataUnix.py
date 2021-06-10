@@ -3,8 +3,6 @@ import datetime
 from DataObject import DataObject
 
 class DataUnix(DataObject): # putting object uses object inheritance?
-    import datetime #FIXME Where does this import go?
-
     def __init__(self, mylist):
 
         super(DataUnix, self).__init__()
