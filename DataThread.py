@@ -8,7 +8,7 @@ from DataObject import DataObject
 
 class DataThread(DataObject):
     def __init__(self, mylist):
-        super(DataThread, self).__init__()
+        super(DataThread, self).__init__(mylist)
         self.mylist = mylist
 
     def num_records(self, arr):
