@@ -9,10 +9,14 @@ class ThreadRecords(object):
     def appendEntry(self, timestamp, randomNumber):
         if not self.__entries:
             self.__entries = []
-        self.__entries.append((timestamp, randomNumber))
+        self.__entries.append([timestamp, randomNumber])
 
     def timestamps(self):
-        return [entry[0] for entry in self.__entries if self.__entries else []]
+        if self.__entries:
+            return self.__entries[0]
+        #return [entry[0] for entry in self.__entries if self.__entries]
 
     def randomNumbers(self):
-        return [entry[1] for entry in self.__entries if self.__entries else []]
+        if self.__entries:
+            return self.__entries[1]
+        #return [entry[1] for entry in self.__entries if self.__entries]

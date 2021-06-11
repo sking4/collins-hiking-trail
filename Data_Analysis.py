@@ -4,6 +4,7 @@ import os
 import csv
 import matplotlib.pyplot as plt
 import argparse
+import numpy as np
 
 import DataRandom
 import DataThread
@@ -71,22 +72,28 @@ def gather_data(file_path):
     with open(str(file_path), 'r+') as csv_file:
         # Read data and separate into lists
         csv_read = csv.reader(csv_file)
-        for row in csv_read:
+        for row in csv_read:  # for each line in the csv file [timestamp, thread ID, random number]
             try:
                 foundThread = False
-                for threadObj in threadList:
-                    if row[1] == threadObj.getThreadID()
-                        threadObj.appendEntry(float(row[0]), int(row[2]))
+                for threadObj in thread_list:  # for a unique thread that has already been added to the thread_list
+                    if float(row[1]) == threadObj.getThreadID():  # if the thread ID for the line in the CSV file equals the unique thread ID in question
+                        print("Test: " + str(test))
+                        print("Row: " + str(row[1]))
+                        threadObj.appendEntry(float(row[0]), row[2])  # add the timestamp and random number information to a list of data specific to that unique thread ID
                         foundThread = True
                         break
-                if not foundThread:
-                    thread_list.append(ThreadRecords.ThreadRecords(row[1], [ (float(row[0]),
-                                                                              int(row[2]))] ))
+                if not foundThread:  # if the line from the CSV file has a thread ID not already captured by the list of unique thread IDs
+                    print("FOUND THREAD")
+                    thread_list.append(ThreadRecords.ThreadRecords(float(row[1]), [float(row[0]), row[2]])) # add that thread ID to the unique list, as well as its timestamp and random number info
+                    print("Thread list: " + str(thread_list))
                 randnum_list.append(float(row[2]))
                 unix_list.append(float(row[0]))
                 time_list.append(float(row[0]) - min(unix_list))
             except:
                 next(csv_read)
+
+    for ele in thread_list:
+        print(str(ele))
     return unix_list, time_list, thread_list, randnum_list
 
 
@@ -99,13 +106,14 @@ def main():
 
     # OUTPUTS
     DataUnix.DataUnix(unix_list).output_unix_metrics()
-    #DataThread.DataThread(thread_list).output_thread_metrics(unix_list)
+    # DataThread.DataThread(thread_list).output_thread_metrics(unix_list)
+    print(thread_list)
     for thread in thread_list:
-        print(thread.getThreadID() + "\tmin time:\t" + np.min(thread.timestamps())
-        print(thread.getThreadID() + "\tmax time:\t" + np.max(thread.timestamps())
+        print(str(thread.getThreadID()) + "\tmin time:\t" + str(np.min(thread.timestamps())))
+        print(str(thread.getThreadID()) + "\tmax time:\t" + str(np.max(thread.timestamps())))
     DataRandom.DataRandom(randnum_list).output_randnum_metrics()
-    plotting(time_list, randnum_list, thread_list)
+    # plotting(time_list, randnum_list, thread_list)
 
 
 if __name__ == '__main__':
-    main()            
+    main()
