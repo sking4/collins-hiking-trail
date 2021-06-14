@@ -7,10 +7,10 @@ class DataObject(object):
         self.mylist = mylist
 
     def earliest_record(self):
-        return np.min(self.mylist)
+        return min(self.mylist)
 
     def latest_record(self):
-        return np.max(self.mylist)
+        return max(self.mylist)
 
     def range(self):
         return self.latest_record() - self.earliest_record()

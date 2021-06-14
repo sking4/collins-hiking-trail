@@ -12,11 +12,12 @@ class ThreadRecords(object):
         self.__entries.append([timestamp, randomNumber])
 
     def timestamps(self):
-        if self.__entries:
-            return self.__entries[0]
-        #return [entry[0] for entry in self.__entries if self.__entries]
+        # error_entry_fix = [float(issue1),float(issue2)]
+        self.__entries.pop(0) # FIXME what is going on with the first 2 entries???
+        self.__entries.pop(0)
+        # return self.__entries
+        # self.__entries.insert(0, error_entry_fix)
+        return [entry[0] for entry in self.__entries if self.__entries]
 
     def randomNumbers(self):
-        if self.__entries:
-            return self.__entries[1]
-        #return [entry[1] for entry in self.__entries if self.__entries]
+        return [entry[1] for entry in self.__entries if self.__entries]
