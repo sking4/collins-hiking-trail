@@ -17,3 +17,11 @@ class DataObject(object):
 
     def len(self):
         return len(self.mylist)
+
+    def average(self):
+        return sum(self.mylist)/len(self.mylist)
+
+    def sum_col(self, col_num):
+        array = np.sum(self.mylist, 0)
+        print(array)
+        return array[col_num]

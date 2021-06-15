@@ -4,13 +4,10 @@ import os
 import csv
 import matplotlib.pyplot as plt
 import argparse
-import numpy as np
-
-import DataRandom
-import DataThread
-import DataUnix
 import DataObject
 import ThreadRecords
+from tabulate import tabulate
+import datetime
 
 
 def plotting(time, randnum, threads):
@@ -40,7 +37,7 @@ def plotting(time, randnum, threads):
 def filename_checker(file_path):
     isValid = False
     if file_path == "z":
-        file_path = str(r"C:\Users\sking4\OneDrive - Raytheon Technologies\Python\AryehData.csv")
+        file_path = str(r"C:\Users\sking4\OneDrive - Raytheon Technologies\Python\AryehData2.csv")
         isValid = True
     elif file_path == "":
         print("File path cannot be blank.")
@@ -82,7 +79,7 @@ def gather_data(file_path):
                         foundThread = True
                         break
                 if not foundThread:  # if the line from the CSV file has a thread ID not already captured by the list of unique thread IDs
-                    thread_list.append(ThreadRecords.ThreadRecords(float(row[1]), [float(row[0]), row[2]])) # add that thread ID to the unique list, as well as its timestamp and random number info
+                    thread_list.append(ThreadRecords.ThreadRecords(float(row[1]), [float(row[0]), row[2]]))  # add that thread ID to the unique list, as well as its timestamp and random number info
             except:
                 next(csv_read)
 
@@ -99,14 +96,43 @@ def main():
     # OUTPUTS
     # DataUnix.DataUnix(unix_list).output_unix_metrics()
     # DataThread.DataThread(thread_list).output_thread_metrics(unix_list)
+    summary_table = []
+    headers_list = ["Thread", "Number of Records", "Earliest Record", "Latest Record"]
+    total_threads = 0
+    max_value = 0
+    max_index = None
+    min_value = 0
+    min_index = None
     for thread in thread_list:  # for each unique thread ID
-        #print(thread.timestamps())
-        print("Thread:\t" + str(thread.getThreadID()) +
-              "\tNumber of Records:\t" + str(len(thread.timestamps())) +
-              "\tmin time:\t" + str(DataObject.DataObject(thread.timestamps()).earliest_record) + #FIXME use DataObject to calculate min and max
-              "\tmax time:\t" + str(max(thread.timestamps())))
+        summary_table.append([str(thread.getThreadID()),
+                             str(len(thread.timestamps())),
+                             datetime.datetime.fromtimestamp(DataObject.DataObject(thread.timestamps()).earliest_record()),
+                             datetime.datetime.fromtimestamp(DataObject.DataObject(thread.timestamps()).latest_record())])
+
+        total_threads += len(thread.timestamps())
+        # Fastest and slowest threads
+        if len(thread.timestamps()) > max_value:
+            max_value = len(thread.timestamps())
+            max_index = thread.getThreadID()
+        if len(thread.timestamps()) < min_value or min_value == 0:
+            min_value = len(thread.timestamps())
+            min_index = thread.getThreadID()
+
+    # print("Length of thread_list: ", total_threads)
+    #
+    # print("\n", tabulate(summary_table, headers=headers_list, floatfmt=("e", "", "", "")))
+    # print("\nAverage numbers of records per thread:", "{:.2f}".format(total_threads/len(thread_list)))
+    #
+    # print("Fastest thread:", "{:e}".format(max_index), "with", max_value, "records")
+    # print("Slowest thread:", "{:e}".format(min_index), "with", min_value, "records")
+    # print("Greatest difference in timestamps per thread: Thread {:e}, time range {} seconds".format(
+    #     thread_set[greatest_diff_index], greatest_diff_value))
+    # print("Least difference in timestamps per thread: Thread {:e}, time range {} seconds".format(
+    #     thread_set[least_diff_index], least_diff_value))
+
     # DataRandom.DataRandom(randnum_list).output_randnum_metrics()
     # plotting(time_list, randnum_list, thread_list)
+
 
 if __name__ == '__main__':
     main()

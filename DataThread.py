@@ -8,41 +8,42 @@ from DataObject import DataObject
 
 
 class DataThread(DataObject):
-    def add_thread_metrics(self, arr, n, arr_set, data, arr_ranges, arr_records, arr_durations):
-        # Metrics per thread
-        data.append(["{:e}".format(arr_set[n]), self.len(),
-                     datetime.datetime.fromtimestamp(self.earliest_record()),
-                     datetime.datetime.fromtimestamp(self.latest_record())])
+#     # def add_thread_metrics(self, arr, n, arr_set, data, arr_ranges, arr_records, arr_durations):
+#     #     # Metrics per thread
+#     #     data.append(["{:e}".format(arr_set[n]), self.len(),
+#     #                  datetime.datetime.fromtimestamp(self.earliest_record()),
+#     #                  datetime.datetime.fromtimestamp(self.latest_record())])
+#     #
+#     #     # Metrics about all threads
+#     #     arr_ranges.append(self.range())
+#     #     arr_records.append(self.len())
+#     #     arr_durations.append(self.range())
+#
+#     def separate_threads(self, unix_list):
+#         arr_set = sorted(set(self.mylist))
+#         unique_arr_count = len(arr_set)
+#
+#         data = []
+#         arr_ranges = []
+#         arr_records = []
+#         arr_durations = []
+#
+#         # Separating the timestamps by unique thread ID
+#         for ele_base in range(0, len(arr_set)):  # For each distinct thread
+#             unix_per_arr_list = []
+#             test_arr = arr_set[ele_base]
+#             for ele_test in range(0, len(self.mylist)):  # Go through the thread list and find the time values for each
+#                 if self.mylist[ele_test] == test_arr:
+#                     unix_per_arr_list.append(
+#                         unix_list[ele_test])  # Add all of the timestamps for that thread to a list
+#             arr = np.array(unix_per_arr_list)
+#
+#             self.add_thread_metrics(arr, ele_base, arr_set, data, arr_ranges, arr_records, arr_durations)
+#
+#         avg_per_period = sum(arr_records) / unique_arr_count
+#
+#         return arr_set, unique_arr_count, data, arr_ranges, arr_records, arr_durations, avg_per_period
 
-        # Metrics about all threads
-        arr_ranges.append(self.range())
-        arr_records.append(self.len())
-        arr_durations.append(self.range())
-
-    def separate_threads(self, unix_list):
-        arr_set = sorted(set(self.mylist))
-        unique_arr_count = len(arr_set)
-
-        data = []
-        arr_ranges = []
-        arr_records = []
-        arr_durations = []
-
-        # Separating the timestamps by unique thread ID
-        for ele_base in range(0, len(arr_set)):  # For each distinct thread
-            unix_per_arr_list = []
-            test_arr = arr_set[ele_base]
-            for ele_test in range(0, len(self.mylist)):  # Go through the thread list and find the time values for each
-                if self.mylist[ele_test] == test_arr:
-                    unix_per_arr_list.append(
-                        unix_list[ele_test])  # Add all of the timestamps for that thread to a list
-            arr = np.array(unix_per_arr_list)
-
-            self.add_thread_metrics(arr, ele_base, arr_set, data, arr_ranges, arr_records, arr_durations)
-
-        avg_per_period = sum(arr_records) / unique_arr_count
-
-        return arr_set, unique_arr_count, data, arr_ranges, arr_records, arr_durations, avg_per_period
 
     def output_thread_metrics(self, unix_list):
         thread_set, unique_threads, thread_data, threads_ranges, threads_records, threads_durations = self.separate_threads(

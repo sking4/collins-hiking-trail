@@ -9,14 +9,10 @@ class ThreadRecords(object):
     def appendEntry(self, timestamp, randomNumber):
         if not self.__entries:
             self.__entries = []
-        self.__entries.append([timestamp, randomNumber])
+        self.__entries.append((timestamp, randomNumber))
+        print(self.__entries)
 
     def timestamps(self):
-        # error_entry_fix = [float(issue1),float(issue2)]
-        self.__entries.pop(0) # FIXME what is going on with the first 2 entries???
-        self.__entries.pop(0)
-        # return self.__entries
-        # self.__entries.insert(0, error_entry_fix)
         return [entry[0] for entry in self.__entries if self.__entries]
 
     def randomNumbers(self):
