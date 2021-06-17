@@ -60,7 +60,7 @@ class DataThread(DataObject):
         fastest_index = threads_records.index(fastest_value)
         slowest_value = min(threads_records)
         slowest_index = threads_records.index(slowest_value)
-
+    
         greatest_diff_value = max(threads_ranges)
         greatest_diff_index = threads_ranges.index(greatest_diff_value)
         least_diff_value = min(threads_ranges)
