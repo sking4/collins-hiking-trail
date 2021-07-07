@@ -9,7 +9,7 @@ import ThreadRecords
 from tabulate import tabulate
 import datetime
 
-from ListSet import createThreadStatsTable, analyzeThreadStatsTable
+from ListSet import createThreadStatsTable, analyzeThreadStatsTable, analyzeRandom
 
 
 def plotting(time, randnum, threads):
@@ -98,7 +98,9 @@ def main():
     # Analyze the thread data collected
     analyzeThreadStatsTable(thread_list)
 
-    # DataRandom.DataRandom(randnum_list).output_randnum_metrics()
+    # Analyze the random numbers
+    analyzeRandom(thread_list)
+
     # plotting(time_list, randnum_list, thread_list)
 
 

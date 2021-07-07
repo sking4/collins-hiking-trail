@@ -12,8 +12,8 @@ class ThreadRecords(object):
         self.__entries.append((timestamp, randomNumber))
         # print(self.__entries)
 
-    def timestamps(self):
+    def getTimestamps(self):
         return [entry[0] for entry in self.__entries if self.__entries]
 
-    def randomNumbers(self):
+    def getRandomNumbers(self):
         return [entry[1] for entry in self.__entries if self.__entries]

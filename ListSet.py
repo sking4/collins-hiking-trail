@@ -1,8 +1,8 @@
 import pandas as pd
-
 import DataObject
 import datetime
 from tabulate import tabulate
+from ThreadRecords import ThreadRecords
 
 
 def createThreadStatsTable(thread_list):
@@ -11,10 +11,10 @@ def createThreadStatsTable(thread_list):
     for thread in thread_list:  # for each unique thread ID
         # Add that thread's info to the master table
         summary_table.append([thread.getThreadID(),
-                              len(thread.timestamps()),
-                              datetime.datetime.fromtimestamp(DataObject.DataObject(thread.timestamps()).minimum()),
-                              datetime.datetime.fromtimestamp(DataObject.DataObject(thread.timestamps()).maximum()),
-                              DataObject.DataObject(thread.timestamps()).range()])
+                              len(thread.getTimestamps()),
+                              datetime.datetime.fromtimestamp(DataObject.DataObject(thread.getTimestamps()).minimum()),
+                              datetime.datetime.fromtimestamp(DataObject.DataObject(thread.getTimestamps()).maximum()),
+                              DataObject.DataObject(thread.getTimestamps()).range()])
 
     print("\n", tabulate(summary_table, headers=headers_list, floatfmt=("", "", "", "", ""))) # Print out the pretty table
     return pd.DataFrame(summary_table, columns=headers_list)  # Turn data table into a dataframe to analyze the columns
@@ -56,22 +56,27 @@ def analyzeThreadStatsTable(thread_list):
     getDeadThreads(df)
 
 
-def AnalyzeRandom(thread_set):
-    for thread in thread_set:
-        # Range
-        randnum_max = DataObject.DataObject(thread.randomNumbers).maximum()
-        randnum_min = DataObject.DataObject(thread.randomNumbers).minimum()
-        print("\nRandom numbers generated from", randnum_min, "to", randnum_max)
+def analyzeRandom(thread_list):
+    #FIXME start here
+    rand_list = []
+    for thread in thread_list:
+        rand_list.append(thread.getRandomNumbers())
 
-    # Sort randomly generated numbers #FIXME stuff after this isn't integrated/updated
-    while True:
-        sorted_list_print = input("Print sorted list of randomly generated numbers? Yes or no: ")
-        if sorted_list_print.lower() == "yes":
-            list_formatted = ["{:e}".format(elem) for elem in self.mylist]
-            print("The randomly generated numbers sorted from smallest to largest are:\t",
-                  *sorted(list_formatted), sep='\n\t')
-            break
-        elif sorted_list_print.lower() == "no":
-            break
-        else:
-            print("Response not recognized, try again.")
+    # Range
+    rand_max = max(rand_list)
+    print(rand_max)
+    rand_min = DataObject.DataObject(rand_list).minimum()
+    #print("\nRandom numbers generated from", rand_min, "to", rand_max)
+    #
+    # # Sort randomly generated numbers #FIXME stuff after this isn't integrated/updated
+    # while True:
+    #     sorted_list_print = input("Print sorted list of randomly generated numbers? Yes or no: ")
+    #     if sorted_list_print.lower() == "yes":
+    #         list_formatted = ["{:e}".format(elem) for elem in thread_list.randomNumbers]
+    #         print("The randomly generated numbers sorted from smallest to largest are:\t",
+    #               *sorted(list_formatted), sep='\n\t')
+    #         break
+    #     elif sorted_list_print.lower() == "no":
+    #         break
+    #     else:
+    #         print("Response not recognized, try again.")
