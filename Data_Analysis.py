@@ -9,6 +9,8 @@ import ThreadRecords
 from tabulate import tabulate
 import datetime
 
+from ListSet import createThreadStatsTable, analyzeThreadStatsTable
+
 
 def plotting(time, randnum, threads):
     plot1 = plt.figure(1)  # Thread value over time
@@ -93,49 +95,11 @@ def main():
     # Open file and process data
     thread_list = gather_data(file_path)
 
-    # OUTPUTS
-    summary_table = []
-    headers_list = ["Thread", "Number of Records", "Earliest Record", "Latest Record", "Duration"]
-    for thread in thread_list:  # for each unique thread ID
-        summary_table.append([str(thread.getThreadID()),
-                             str(len(thread.timestamps())),
-                             datetime.datetime.fromtimestamp(DataObject.DataObject(thread.timestamps()).minimum()),
-                             datetime.datetime.fromtimestamp(DataObject.DataObject(thread.timestamps()).maximum()),
-                             DataObject.DataObject(thread.timestamps()).range()])
-    total_threads = sum(len(thread.timestamps()) for thread in thread_list)
-    print("Total entries: ", total_threads)
-    print("\n", tabulate(summary_table, headers=headers_list, floatfmt=("", "", "", "", "")))
-    print("\nAverage numbers of records per thread:", "{:.2f}".format(total_threads/len(thread_list)))
+    # Create master thread table
+    df = createThreadStatsTable(thread_list)
 
-    max_value = max(len(thread.timestamps()) for thread in thread_list)
-    min_value = min(len(thread.timestamps()) for thread in thread_list)
-    greatest_range_value = max(DataObject.DataObject(thread.timestamps()).range() for thread in thread_list)
-    least_range_value = min(DataObject.DataObject(thread.timestamps()).range() for thread in thread_list)
-
-    max_index = []
-    min_index = []
-    greatest_range_index = []
-    least_range_index = []
-    # For finding indexes, there has to be a better way
-    for thread in thread_list:
-        if len(thread.timestamps()) == max_value:
-            max_index.append(thread.getThreadID())
-        if len(thread.timestamps()) == min_value:
-            min_index.append(thread.getThreadID())
-        if DataObject.DataObject(thread.timestamps()).range() == greatest_range_value:
-            greatest_range_index = thread.getThreadID()
-        if DataObject.DataObject(thread.timestamps()).range() == least_range_value:
-            least_range_index = thread.getThreadID()
-
-
-    # max_index = max(thread.getThreadID() for thread in thread_list)  # FIXME this is just getting the maximum thread ID, not the index
-    # min_index = min(thread.getThreadID() for thread in thread_list) #FIXME this is just getting the minimum thread ID, not the index
-    #greatest_range_index = max((DataObject.DataObject(thread.timestamps()).range()).getThreadID #FIXME
-
-    print("Fastest thread:", max_index, "with", max_value, "records")
-    print("Slowest thread:", min_index, "with", min_value, "records")
-    print("Greatest difference in timestamps per thread: Thread {}, time range {} seconds".format(greatest_range_index, greatest_range_value))
-    print("Least difference in timestamps per thread: Thread {}, time range {} seconds".format(least_range_index, least_range_value))
+    # Analyze the data collected
+    analyzeThreadStatsTable(df)
 
     # DataRandom.DataRandom(randnum_list).output_randnum_metrics()
     # plotting(time_list, randnum_list, thread_list)
