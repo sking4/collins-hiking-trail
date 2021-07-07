@@ -95,11 +95,8 @@ def main():
     # Open file and process data
     thread_list = gather_data(file_path)
 
-    # Create master thread table
-    df = createThreadStatsTable(thread_list)
-
-    # Analyze the data collected
-    analyzeThreadStatsTable(df)
+    # Analyze the thread data collected
+    analyzeThreadStatsTable(thread_list)
 
     # DataRandom.DataRandom(randnum_list).output_randnum_metrics()
     # plotting(time_list, randnum_list, thread_list)
