@@ -1,8 +1,8 @@
-import pandas as pd
-import DataObject
 import datetime
+import pandas as pd
 from tabulate import tabulate
-from ThreadRecords import ThreadRecords
+import DataObject
+
 
 
 def createThreadStatsTable(thread_list):
@@ -66,7 +66,7 @@ def analyzeRandom(thread_list):
     rand_max = max(rand_list)
     print(rand_max)
     rand_min = DataObject.DataObject(rand_list).minimum()
-    #print("\nRandom numbers generated from", rand_min, "to", rand_max)
+    print("\nRandom numbers generated from", rand_min, "to", rand_max)
     #
     # # Sort randomly generated numbers #FIXME stuff after this isn't integrated/updated
     # while True:

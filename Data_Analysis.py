@@ -2,13 +2,9 @@ from __future__ import print_function
 import sys
 import os
 import csv
-import matplotlib.pyplot as plt
 import argparse
-import DataObject
+import matplotlib.pyplot as plt
 import ThreadRecords
-from tabulate import tabulate
-import datetime
-
 from ListSet import createThreadStatsTable, analyzeThreadStatsTable, analyzeRandom
 
 
@@ -54,9 +50,10 @@ def collect_filename():
     if len(sys.argv) <= 1:
         while True:
             file_path = input("Please specify the data CSV file path: ")
-            if filename_checker(file_path):
+            if filename_checker(file_path)[0]:
                 file_path = filename_checker(file_path)[1]
                 break
+
     else:
         parser = argparse.ArgumentParser()
         parser.add_argument('file_path', type=str)
