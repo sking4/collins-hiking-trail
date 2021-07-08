@@ -16,4 +16,4 @@ class ThreadRecords(object):
         return [entry[0] for entry in self.__entries if self.__entries]
 
     def getRandomNumbers(self):
-        return [entry[1] for entry in self.__entries if self.__entries]
+        return [float(entry[1]) for entry in self.__entries if self.__entries]

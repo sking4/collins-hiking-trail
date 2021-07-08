@@ -5,7 +5,7 @@ import csv
 import argparse
 import matplotlib.pyplot as plt
 import ThreadRecords
-from ListSet import createThreadStatsTable, analyzeThreadStatsTable, analyzeRandom
+from ListSet import analyzeThreadStats, analyzeRandom
 
 
 def plotting(time, randnum, threads):
@@ -90,10 +90,13 @@ def main():
     file_path = collect_filename()
 
     # Open file and process data
+    # thread_list is a matrix with a list of all the unique thread IDs and
+    # each of those holding the data for the corresponding thread
+    # (timestamp and random number for each occurrence of that thread)
     thread_list = gather_data(file_path)
 
     # Analyze the thread data collected
-    analyzeThreadStatsTable(thread_list)
+    analyzeThreadStats(thread_list)
 
     # Analyze the random numbers
     analyzeRandom(thread_list)
