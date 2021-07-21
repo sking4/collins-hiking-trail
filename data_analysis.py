@@ -4,32 +4,8 @@ import os
 import csv
 import argparse
 import matplotlib.pyplot as plt
-import ThreadRecords
-from ListSet import analyzeThreadStats, analyzeRandom
-
-
-def plotting(time, randnum, threads):
-    plot1 = plt.figure(1)  # Thread value over time
-    plt.plot(time, threads)
-    plt.title("Thread ID Over Time")
-    plt.xlabel("Time (s)")
-    plt.ylabel("Thread ID")
-
-    plot2 = plt.figure(2)  # Zoomed in thread value over time
-    plt.plot(time, threads)
-    x_min, x_max = time[int(len(time) / 4)], time[int(len(time) / 3)]
-    plt.xlim([x_min, x_max])
-    plt.title("Thread ID Over Time (Snippet)")
-    plt.xlabel("Time (s)")
-    plt.ylabel("Thread ID")
-
-    plot3 = plt.figure(3)  # Random numbers generated over time
-    plt.plot(time, randnum)
-    plt.title("Random Numbers Over Time")
-    plt.xlabel("Time (s)")
-    plt.ylabel("Random Number")
-
-    plt.show()
+import thread_records
+from list_set import analyzeThreadStats, analyzeRandom, plotting
 
 
 def filename_checker(file_path):
@@ -73,12 +49,16 @@ def gather_data(file_path):
             try:
                 foundThread = False
                 for threadObj in thread_list:  # for a unique thread that has already been added to the thread_list
-                    if float(row[1]) == threadObj.getThreadID():  # if the thread ID for the line in the CSV file equals the unique thread ID in question
-                        threadObj.appendEntry(float(row[0]), row[2])  # add the timestamp and random number information to a list of data specific to that unique thread ID
+                    if float(row[1]) == threadObj.getThreadID():  # if the thread ID for the line in the CSV file equals
+                        # the unique thread ID in question
+                        threadObj.appendEntry(float(row[0]), row[2])  # add the timestamp and random number information
+                        # to a list of data specific to that unique thread ID
                         foundThread = True
                         break
-                if not foundThread:  # if the line from the CSV file has a thread ID not already captured by the list of unique thread IDs
-                    thread_list.append(ThreadRecords.ThreadRecords(float(row[1]), [(float(row[0]), row[2])]))  # add that thread ID to the unique list, as well as its timestamp and random number info
+                if not foundThread:  # if the line from the CSV file has a thread ID not already captured by the list
+                    # of unique thread IDs
+                    thread_list.append(thread_records.ThreadRecords(float(row[1]), [(float(row[0]), row[2])]))  # add
+                    # that thread ID to the unique list, as well as its timestamp and random number info
             except:
                 next(csv_read)
     return thread_list
@@ -101,7 +81,8 @@ def main():
     # Analyze the random numbers
     analyzeRandom(thread_list)
 
-    # plotting(time_list, randnum_list, thread_list)
+    # Plot stuff
+    plotting(thread_list)
 
 
 if __name__ == '__main__':

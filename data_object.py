@@ -1,5 +1,6 @@
-import numpy as np
 import datetime
+import numpy as np
+
 from scipy import stats
 
 
@@ -11,13 +12,13 @@ class DataObject(object):
     def minimum(self):
         return min(self.mylist)
 
-    def min_minimum(self):  # FIXME I feel like there's a better way to do this
+    def min_minimum(self):
         return DataObject(DataObject(entry).minimum() for entry in self.mylist).minimum()
 
     def maximum(self):
         return max(self.mylist)
 
-    def max_maximum(self):  # FIXME I feel like there's a better way to do this
+    def max_maximum(self):
         return DataObject(DataObject(entry).maximum() for entry in self.mylist).maximum()
 
     def range(self):
@@ -48,7 +49,8 @@ class DataObject(object):
 
     def getTotalEntries(self):
         total_entries = DataObject(len(entry.getTimestamps()) for entry in self.mylist).sum()
-        print("\nTotal entries: ", total_entries)
+        print("\nNumber of threads: ", len(self.mylist))
+        print("Total entries: ", total_entries)
         return total_entries
 
     def getAvgCountRecords(self):
@@ -75,7 +77,7 @@ class DataObject(object):
                 slowest_list.append(entry_ID)
         print("Slowest thread(s): Thread(s)", slowest_list, "with", slowest_value, "records")
         return slowest_list, slowest_value
-    
+
     def getMaxDuration(self):
         max_duration_list = []
         max_duration_value = DataObject(DataObject(entry.getTimestamps()).range() for entry in self.mylist).maximum()
@@ -113,3 +115,8 @@ class DataObject(object):
                   "died after", outlier[0],
                   "seconds at", datetime.datetime.fromtimestamp(outlier[2]))
         return
+
+    def formatScientific(self):
+        for entry in self.mylist:
+            print("Entry: ", entry)
+        return ("{:e}".format(float(entry)) for entry in self.mylist)
