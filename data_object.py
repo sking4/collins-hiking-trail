@@ -1,7 +1,6 @@
 import datetime
 import numpy as np
-
-from scipy import stats
+import scipy.stats
 
 
 class DataObject(object):
@@ -35,7 +34,7 @@ class DataObject(object):
 
     def madMethod(self):
         med = np.median(self.mylist)
-        mad = np.abs(stats.median_absolute_deviation(self.mylist))
+        mad = np.abs(scipy.stats.median_absolute_deviation(self.mylist))
 
         threshold = 9
         outlier_durations_list = []
