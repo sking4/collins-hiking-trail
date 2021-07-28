@@ -1,24 +1,123 @@
-import datetime
-import numpy as np
-import scipy.stats
+from my_functions import mad_method_function
+
+
+class ThreadObject(object):
+    def __init__(self, tid=0, time_list=None, rand_list=None):
+        self.threadID = tid
+        self.timeObjects = DataObject(time_list)
+        self.randObjects = DataObject(rand_list)
+
+
+class AnalysisObject(object):
+    def __init__(self, my_object_tuple=None):
+        super(AnalysisObject, self).__init__()
+        self.analysisTargets = {}
+        for my_object_list, my_thread_ID in my_object_tuple:
+            self.analysisTargets[my_thread_ID] = my_object_list
+
+    def min(self):
+        return min(self.analysisTargets[entry].minimum() for entry in self.analysisTargets)
+
+    def max(self):
+        return max(self.analysisTargets[entry].maximum() for entry in self.analysisTargets)
+
+    def getNumThreads(self):
+        num_threads = len(self.analysisTargets)
+        return num_threads
+
+    def getTotalEntries(self):
+        total_entries = sum(self.analysisTargets[entry].len() for entry in self.analysisTargets)
+        return total_entries
+
+    def getAvgCountRecords(self):
+        avg_count = sum(self.analysisTargets[entry].len() for entry in self.analysisTargets)/len(self.analysisTargets)
+        return avg_count
+
+    def getMostRecords(self):
+        most_records_list = []
+        most_records_value = max([self.analysisTargets[entry].len() for entry in self.analysisTargets])
+        for entry in self.analysisTargets:
+            if self.analysisTargets[entry].len() == most_records_value:
+                most_records_list.append(entry)
+        return most_records_list, most_records_value
+
+    def getLeastRecords(self):
+        least_records_list = []
+        least_records_value = max([self.analysisTargets[entry].len() for entry in self.analysisTargets])
+        for entry in self.analysisTargets:
+            if self.analysisTargets[entry].len() == least_records_value:
+                least_records_list.append(entry)
+        return least_records_list, least_records_value
+
+    def getFastest(self):
+        fastest_list = []
+        # Fastest value is determined by max velocity (values per second)
+        fastest_value = max([self.analysisTargets[entry].len() /
+                             self.analysisTargets[entry].range() for entry in self.analysisTargets])
+        for entry in self.analysisTargets:
+            if (self.analysisTargets[entry].len() / self.analysisTargets[entry].range()) == fastest_value:
+                fastest_list.append(entry)
+        return fastest_list, fastest_value
+
+    def getSlowest(self):
+        slowest_list = []
+        # Slowest value is determined by min velocity (values per second)
+        slowest_value = min([self.analysisTargets[entry].len() /
+                             self.analysisTargets[entry].range() for entry in self.analysisTargets])
+        for entry in self.analysisTargets:
+            if (self.analysisTargets[entry].len() / self.analysisTargets[entry].range()) == slowest_value:
+                slowest_list.append(entry)
+        return slowest_list, slowest_value
+
+    def getMaxDuration(self):
+        max_duration_list = []
+        max_duration_value = max([self.analysisTargets[entry].range() for entry in self.analysisTargets])
+        for entry in self.analysisTargets:
+            if self.analysisTargets[entry].range() == max_duration_value:
+                max_duration_list.append(entry)
+        return max_duration_list, max_duration_value
+
+    def getMinDuration(self):
+        min_duration_list = []
+        min_duration_value = min([self.analysisTargets[entry].range() for entry in self.analysisTargets])
+        for entry in self.analysisTargets:
+            if self.analysisTargets[entry].range() == min_duration_value:
+                min_duration_list.append(entry)
+        return min_duration_list, min_duration_value
+
+    def getOutliers(self):
+        duration_outlier_list = mad_method_function([self.analysisTargets[entry].range()
+                                                     for entry in self.analysisTargets], 9)
+        count_outlier_list = mad_method_function([self.analysisTargets[entry].len()
+                                                  for entry in self.analysisTargets], 9)
+
+        for entry in self.analysisTargets:
+            # Duration Outliers (Dead Threads)
+            for i, outlier in enumerate(duration_outlier_list):
+                if self.analysisTargets[entry].range() == outlier[0]:
+                    t = self.analysisTargets[entry].maximum()
+                    duration_outlier_list[i] = outlier + (entry, t)
+
+            # Number of Records Outliers
+            for i, outlier in enumerate(count_outlier_list):
+                if self.analysisTargets[entry].len() == outlier[0]:
+                    t = self.analysisTargets[entry].maximum()
+                    count_outlier_list[i] = outlier + (entry, t)
+
+        return duration_outlier_list, count_outlier_list
 
 
 class DataObject(object):
     def __init__(self, mylist=None):
         super(DataObject, self).__init__()
         self.mylist = mylist
+        # self.tid =
 
     def minimum(self):
         return min(self.mylist)
 
-    def min_minimum(self):
-        return DataObject(DataObject(entry).minimum() for entry in self.mylist).minimum()
-
     def maximum(self):
         return max(self.mylist)
-
-    def max_maximum(self):
-        return DataObject(DataObject(entry).maximum() for entry in self.mylist).maximum()
 
     def range(self):
         return self.maximum() - self.minimum()
@@ -31,89 +130,6 @@ class DataObject(object):
 
     def average(self):
         return sum(self.mylist) / self.len()
-
-    def madMethod(self):
-        med = np.median(self.mylist)
-        mad = np.abs(scipy.stats.median_absolute_deviation(self.mylist))
-
-        threshold = 9
-        outlier_durations_list = []
-        for v in self.mylist:
-            t = np.abs((v - med) / mad)
-            if t > threshold:
-                outlier_durations_list.append((v,))
-            else:
-                continue
-        return outlier_durations_list
-
-    def getTotalEntries(self):
-        total_entries = DataObject(len(entry.getTimestamps()) for entry in self.mylist).sum()
-        print("\nNumber of threads: ", len(self.mylist))
-        print("Total entries: ", total_entries)
-        return total_entries
-
-    def getAvgCountRecords(self):
-        avg_count = DataObject([len(entry.getTimestamps()) for entry in self.mylist]).average()
-        print("Average number of records per thread:", "{:.2f}".format(avg_count))
-        return avg_count
-
-    def getFastest(self):
-        fastest_list = []
-        fastest_value = DataObject(len(entry.getTimestamps()) for entry in self.mylist).maximum()
-        for entry in self.mylist:
-            entry_ID = entry.getThreadID()
-            if len(entry.getTimestamps()) == fastest_value:
-                fastest_list.append(entry_ID)
-        print("Fastest thread(s): Thread(s)", fastest_list, "with", fastest_value, "records")
-        return fastest_list, fastest_value
-
-    def getSlowest(self):
-        slowest_list = []
-        slowest_value = DataObject(len(entry.getTimestamps()) for entry in self.mylist).minimum()
-        for entry in self.mylist:
-            entry_ID = entry.getThreadID()
-            if len(entry.getTimestamps()) == slowest_value:
-                slowest_list.append(entry_ID)
-        print("Slowest thread(s): Thread(s)", slowest_list, "with", slowest_value, "records")
-        return slowest_list, slowest_value
-
-    def getMaxDuration(self):
-        max_duration_list = []
-        max_duration_value = DataObject(DataObject(entry.getTimestamps()).range() for entry in self.mylist).maximum()
-        for entry in self.mylist:
-            entry_ID = entry.getThreadID()
-            if DataObject(entry.getTimestamps()).range() == max_duration_value:
-                max_duration_list.append(entry_ID)
-        print("Greatest difference in timestamps per thread: Thread(s) {}, time range {} seconds".format(max_duration_list, max_duration_value))
-        return max_duration_list, max_duration_value
-        
-    def getMinDuration(self):
-        min_duration_list = []
-        min_duration_value = DataObject(DataObject(entry.getTimestamps()).range() for entry in self.mylist).maximum()
-        for entry in self.mylist:
-            entry_ID = entry.getThreadID()
-            if DataObject(entry.getTimestamps()).range() == min_duration_value:
-                min_duration_list.append(entry_ID)
-        print("Least difference in timestamps per thread: Thread(s) {}, time range {} seconds".format(
-            min_duration_list, min_duration_value))
-        return min_duration_list, min_duration_value
-
-    def getOutliers(self):
-        outlier_list = DataObject([DataObject(entry.getTimestamps()).range() for entry in self.mylist]).madMethod()
-        for entry in self.mylist:
-            entry_ID = entry.getThreadID()
-            # Outliers (Dead Threads)
-            for i, outlier in enumerate(outlier_list):
-                if DataObject(entry.getTimestamps()).range() == outlier[0]:
-                    t = DataObject(entry.getTimestamps()).maximum()
-                    outlier_list[i] = outlier + (entry_ID, t)
-
-        print("\nOutlier thread(s): ")
-        for outlier in outlier_list:
-            print("\tThread", outlier[1],
-                  "died after", outlier[0],
-                  "seconds at", datetime.datetime.fromtimestamp(outlier[2]))
-        return
 
     def formatScientific(self):
         for entry in self.mylist:
